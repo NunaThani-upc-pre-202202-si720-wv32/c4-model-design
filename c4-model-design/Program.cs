@@ -12,9 +12,9 @@ namespace c4_model_design
 
         static void RenderModels()
         {
-            const long workspaceId = 77391;
-            const string apiKey = "05545864-98fa-426b-a228-3e340763f5f4";
-            const string apiSecret = "4fb1d5e4-4acb-4189-ba87-c0ccc3b3df63";
+            const long workspaceId = 77525;
+            const string apiKey = "92cd0cb3-a737-4353-b4b4-ba0a01ea868b";
+            const string apiSecret = "2d31febd-162b-4e11-8423-70cdc8b3bda0";
 
             StructurizrClient structurizrClient = new StructurizrClient(apiKey, apiSecret);
 
