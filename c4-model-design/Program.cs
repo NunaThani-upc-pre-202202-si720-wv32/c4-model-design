@@ -37,9 +37,11 @@ namespace c4_model_design
 
             Person Paciente = model.AddPerson("Paciente", "Paciente con algún problema de salud mental");
             Person Psicologo = model.AddPerson("Psicólogo", "¨Profesional de la salud mental");
+            Person Administrador = model.AddPerson("Administrador", "Persona encargada de administrar el sistema");
 
             Paciente.Uses(Enlazador, "Agenda citas psicológicas para tratar su problema de salud mental");
             Psicologo.Uses(Enlazador, "Trata a los pacientes para ayudarlos con su problema de salud mental");
+            Administrador.Uses(Enlazador, "Administra el sistema");
 
             Enlazador.Uses(Yape, "Consulta información en tiempo real el estado y las transacciones de la cuenta de la aplicación, y paga a los psicólogos");
             Enlazador.Uses(Plin, "Consulta información en tiempo real el estado y las transacciones de la cuenta de la aplicación, y paga a los psicólogos");
@@ -53,6 +55,7 @@ namespace c4_model_design
             // Tags
             Paciente.AddTags("Paciente");
             Psicologo.AddTags("Psicologo");
+            Administrador.AddTags("Administrador");
             ChatBot.AddTags("ChatBot");
             Enlazador.AddTags("NunaThani");
             Yape.AddTags("Yape");
@@ -66,6 +69,7 @@ namespace c4_model_design
             Styles styles = viewSet.Configuration.Styles;
             styles.Add(new ElementStyle("Paciente") { Background = "#0a60ff", Color = "#ffffff", Shape = Shape.Person });
             styles.Add(new ElementStyle("Psicologo") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.Person });
+            styles.Add(new ElementStyle("Administrador") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.Person });
             styles.Add(new ElementStyle("NunaThani") { Background = "#008f39", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("Yape") { Background = "#00193b", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("Plin") { Background = "#00eaff", Color = "#ffffff", Shape = Shape.RoundedBox });
@@ -100,6 +104,9 @@ namespace c4_model_design
 
             Psicologo.Uses(mobileApplication, "Consulta");
             Psicologo.Uses(landingPage, "Consulta");
+            
+            Administrador.Uses(mobileApplication, "Consulta");
+            Administrador.Uses(landingPage, "Consulta");
 
             mobileApplication.Uses(apiRest, "API Request", "JSON/HTTPS");
 
