@@ -78,7 +78,7 @@ namespace c4_model_design
             styles.Add(new ElementStyle("GoogleMeet") { Background = "#ff0000", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("GoogleCalendar") { Background = "#ff0000", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("GoogleAccount") { Background = "#ff0000", Color = "#ffffff", Shape = Shape.RoundedBox });
-            styles.Add(new ElementStyle("ChatBot") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.Person });
+            styles.Add(new ElementStyle("ChatBot") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.RoundedBox});
 
             SystemContextView contextView = viewSet.CreateSystemContextView(Enlazador, "Contexto", "Diagrama de contexto");
             contextView.PaperSize = PaperSize.A4_Landscape;
