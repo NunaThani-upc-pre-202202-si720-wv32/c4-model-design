@@ -12,9 +12,9 @@ namespace c4_model_design
 
         static void RenderModels()
         {
-            const long workspaceId = 77525;
-            const string apiKey = "92cd0cb3-a737-4353-b4b4-ba0a01ea868b";
-            const string apiSecret = "2d31febd-162b-4e11-8423-70cdc8b3bda0";
+            const long workspaceId = 77391;
+            const string apiKey = "05545864-98fa-426b-a228-3e340763f5f4";
+            const string apiSecret = "4fb1d5e4-4acb-4189-ba87-c0ccc3b3df63";
 
             StructurizrClient structurizrClient = new StructurizrClient(apiKey, apiSecret);
 
@@ -25,40 +25,59 @@ namespace c4_model_design
             Model model = workspace.Model;
 
             // 1. Diagrama de Contexto
-            SoftwareSystem monitoringSystem = model.AddSoftwareSystem("Monitoreo del Traslado Aéreo de Vacunas SARS-CoV-2", "Permite el seguimiento y monitoreo del traslado aéreo a nuestro país de las vacunas para la COVID-19.");
-            SoftwareSystem googleMaps = model.AddSoftwareSystem("Google Maps", "Plataforma que ofrece una REST API de información geo referencial.");
-            SoftwareSystem aircraftSystem = model.AddSoftwareSystem("Aircraft System", "Permite transmitir información en tiempo real por el avión del vuelo a nuestro sistema");
+            SoftwareSystem Enlazador = model.AddSoftwareSystem("Sistema de tratado de la salud mental Nuna Thani", "Permite que los pacientes con problemas de salud mental puedan diagnosticar su enfermedad, recibir sugerencias para tratarla, y agendar citas con psicólogos.");
+            SoftwareSystem Yape = model.AddSoftwareSystem("Yape", "Permite realizar transacciones monetarias simples a través de un código QR");
+            SoftwareSystem Plin = model.AddSoftwareSystem("Plin", "Permite realizar transacciones monetarias simples a través de un código QR");
+            SoftwareSystem Tunki = model.AddSoftwareSystem("Tunki", "Permite realizar transacciones monetarias simples a través de un código QR");
+            SoftwareSystem Visa = model.AddSoftwareSystem("Visa", "Permite realizar transacciones monetarias de una cuenta a otra");
 
-            Person ciudadano = model.AddPerson("Ciudadano", "Ciudadano peruano.");
-            Person admin = model.AddPerson("Admin", "User Admin.");
+            Person Paciente = model.AddPerson("Paciente", "Paciente con algún problema de salud mental");
+            Person Psicologo = model.AddPerson("Psicólogo", "¨Profesional de la salud mental");
 
-            ciudadano.Uses(monitoringSystem, "Realiza consultas para mantenerse al tanto de la planificación de los vuelos hasta la llegada del lote de vacunas al Perú");
-            admin.Uses(monitoringSystem, "Realiza consultas para mantenerse al tanto de la planificación de los vuelos hasta la llegada del lote de vacunas al Perú");
+            Paciente.Uses(Enlazador, "Agenda citas psicológicas para tratar su problema de salud mental");
+            Psicologo.Uses(Enlazador, "Trata a los pacientes para ayudarlos con su problema de salud mental");
 
-            monitoringSystem.Uses(aircraftSystem, "Consulta información en tiempo real por el avión del vuelo");
-            monitoringSystem.Uses(googleMaps, "Usa la API de google maps");
+            Enlazador.Uses(Yape, "Consulta información en tiempo real el estado y las transacciones de la cuenta de la aplicación, y paga a los psicólogos");
+            Enlazador.Uses(Plin, "Consulta información en tiempo real el estado y las transacciones de la cuenta de la aplicación, y paga a los psicólogos");
+            Enlazador.Uses(Tunki, "Consulta información en tiempo real el estado y las transacciones de la cuenta de la aplicación, y paga a los psicólogos");
+            Enlazador.Uses(Visa, "Consulta información en tiempo real el estado y las transacciones de la cuenta de la aplicación, y paga a los psicólogos");
+
+            Paciente.Uses(Yape, "Consulta información de su estado de cuenta y hace transferencias a la aplicación");
+            Paciente.Uses(Plin, "Consulta información de su estado de cuenta y hace transferencias a la aplicación");
+            Paciente.Uses(Tunki, "Consulta información de su estado de cuenta y hace transferencias a la aplicación");
+            Paciente.Uses(Visa, "Consulta información de su estado de cuenta y hace transferencias a la aplicación");
+
+            Psicologo.Uses(Yape, "Consulta información de su estado de cuenta para confirmar que se le halla pagado");
+            Psicologo.Uses(Plin, "Consulta información de su estado de cuenta para confirmar que se le halla pagado");
+            Psicologo.Uses(Tunki, "Consulta información de su estado de cuenta para confirmar que se le halla pagado");
+            Psicologo.Uses(Visa, "Consulta información de su estado de cuenta para confirmar que se le halla pagado");
 
             // Tags
-            ciudadano.AddTags("Ciudadano");
-            admin.AddTags("Admin");
-            monitoringSystem.AddTags("SistemaMonitoreo");
-            googleMaps.AddTags("GoogleMaps");
-            aircraftSystem.AddTags("AircraftSystem");
+            Paciente.AddTags("Paciente");
+            Psicologo.AddTags("Psicologo");
+            Enlazador.AddTags("NunaThani");
+            Yape.AddTags("Yape");
+            Plin.AddTags("Plin");
+            Tunki.AddTags("Tunki");
+            Visa.AddTags("Visa");
 
             Styles styles = viewSet.Configuration.Styles;
-            styles.Add(new ElementStyle("Ciudadano") { Background = "#0a60ff", Color = "#ffffff", Shape = Shape.Person });
-            styles.Add(new ElementStyle("Admin") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.Person });
-            styles.Add(new ElementStyle("SistemaMonitoreo") { Background = "#008f39", Color = "#ffffff", Shape = Shape.RoundedBox });
-            styles.Add(new ElementStyle("GoogleMaps") { Background = "#90714c", Color = "#ffffff", Shape = Shape.RoundedBox });
-            styles.Add(new ElementStyle("AircraftSystem") { Background = "#2f95c7", Color = "#ffffff", Shape = Shape.RoundedBox });
-            
-            SystemContextView contextView = viewSet.CreateSystemContextView(monitoringSystem, "Contexto", "Diagrama de contexto");
+            styles.Add(new ElementStyle("Paciente") { Background = "#0a60ff", Color = "#ffffff", Shape = Shape.Person });
+            styles.Add(new ElementStyle("Psicologo") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.Person });
+            styles.Add(new ElementStyle("NunaThani") { Background = "#008f39", Color = "#ffffff", Shape = Shape.RoundedBox });
+            styles.Add(new ElementStyle("Yape") { Background = "#00eaff", Color = "#ffffff", Shape = Shape.RoundedBox });
+            styles.Add(new ElementStyle("Plin") { Background = "#00eaff", Color = "#ffffff", Shape = Shape.RoundedBox });
+            styles.Add(new ElementStyle("Tunki") { Background = "#f700ff", Color = "#ffffff", Shape = Shape.RoundedBox });
+            styles.Add(new ElementStyle("Visa") { Background = "#0008ff", Color = "#ffffff", Shape = Shape.RoundedBox });
+
+            SystemContextView contextView = viewSet.CreateSystemContextView(Enlazador, "Contexto", "Diagrama de contexto");
             contextView.PaperSize = PaperSize.A4_Landscape;
             contextView.AddAllSoftwareSystems();
             contextView.AddAllPeople();
 
             // 2. Diagrama de Contenedores
             Container mobileApplication = Enlazador.AddContainer("Mobile App", "Permite a los usuarios ver sus próximas citas, tratar sus problemas de salud mental, y editar sus datos", "Swift UI");
+            Container webApplication = Enlazador.AddContainer("Web App", "Permite a los usuarios ver sus próximas citas, tratar sus problemas de salud mental, y editar sus datos", "React");
             Container landingPage = Enlazador.AddContainer("Landing Page", "", "React");
             Container apiRest = Enlazador.AddContainer("API REST", "API Rest", "NodeJS (NestJS) port 8080");
 
@@ -72,30 +91,34 @@ namespace c4_model_design
             Container database = Enlazador.AddContainer("Database", "", "SQL");
             
             Paciente.Uses(mobileApplication, "Consulta");
+            Paciente.Uses(webApplication, "Consulta");
             Paciente.Uses(landingPage, "Consulta");
 
             Psicologo.Uses(mobileApplication, "Consulta");
+            Psicologo.Uses(webApplication, "Consulta");
             Psicologo.Uses(landingPage, "Consulta");
 
             mobileApplication.Uses(apiRest, "API Request", "JSON/HTTPS");
             webApplication.Uses(apiRest, "API Request", "JSON/HTTPS");
 
-            apiRest.Uses(flightPlanningContext, "", "");
-            apiRest.Uses(airportContext, "", "");
-            apiRest.Uses(aircraftInventoryContext, "", "");
-            apiRest.Uses(vaccinesInventoryContext, "", "");
-            apiRest.Uses(monitoringContext, "", "");
-            apiRest.Uses(securityContext, "", "");
+            apiRest.Uses(PaymentMethod, "", "");
+            apiRest.Uses(CalendarContext, "", "");
+            apiRest.Uses(ChatBotContext, "", "");
+            apiRest.Uses(AccountContext, "", "");
+            apiRest.Uses(MentalHealthContext, "", "");
+            apiRest.Uses(GroupsContext, "", "");
 
-            flightPlanningContext.Uses(database, "", "");
-            airportContext.Uses(database, "", "");
-            aircraftInventoryContext.Uses(database, "", "");
-            vaccinesInventoryContext.Uses(database, "", "");
-            monitoringContext.Uses(database, "", "");
-            securityContext.Uses(database, "", "");
+            PaymentMethod.Uses(database, "", "");
+            CalendarContext.Uses(database, "", "");
+            ChatBotContext.Uses(database, "", "");
+            AccountContext.Uses(database, "", "");
+            MentalHealthContext.Uses(database, "", "");
+            GroupsContext.Uses(database, "", "");
 
-            monitoringContext.Uses(googleMaps, "API Request", "JSON/HTTPS");
-            monitoringContext.Uses(aircraftSystem, "API Request", "JSON/HTTPS");
+            PaymentMethod.Uses(Yape, "API Request", "JSON/HTTPS");
+            PaymentMethod.Uses(Plin, "API Request", "JSON/HTTPS");
+            PaymentMethod.Uses(Tunki, "API Request", "JSON/HTTPS");
+            PaymentMethod.Uses(Visa, "API Request", "JSON/HTTPS");
 
             // Tags
             mobileApplication.AddTags("MobileApp");
@@ -106,12 +129,12 @@ namespace c4_model_design
 
             string contextTag = "Context";
 
-            flightPlanningContext.AddTags(contextTag);
-            airportContext.AddTags(contextTag);
-            aircraftInventoryContext.AddTags(contextTag);
-            vaccinesInventoryContext.AddTags(contextTag);
-            monitoringContext.AddTags(contextTag);
-            securityContext.AddTags(contextTag);
+            PaymentMethod.AddTags(contextTag);
+            CalendarContext.AddTags(contextTag);
+            ChatBotContext.AddTags(contextTag);
+            AccountContext.AddTags(contextTag);
+            MentalHealthContext.AddTags(contextTag);
+            GroupsContext.AddTags(contextTag);
 
             styles.Add(new ElementStyle("MobileApp") { Background = "#9d33d6", Color = "#ffffff", Shape = Shape.MobileDevicePortrait, Icon = "" });
             styles.Add(new ElementStyle("WebApp") { Background = "#9d33d6", Color = "#ffffff", Shape = Shape.WebBrowser, Icon = "" });
@@ -120,67 +143,50 @@ namespace c4_model_design
             styles.Add(new ElementStyle("Database") { Shape = Shape.Cylinder, Background = "#ff0000", Color = "#ffffff", Icon = "" });
             styles.Add(new ElementStyle(contextTag) { Shape = Shape.Hexagon, Background = "#facc2e", Icon = "" });
 
-            ContainerView containerView = viewSet.CreateContainerView(monitoringSystem, "Contenedor", "Diagrama de contenedores");
+            ContainerView containerView = viewSet.CreateContainerView(Enlazador, "Contenedor", "Diagrama de contenedores");
             contextView.PaperSize = PaperSize.A4_Landscape;
             containerView.AddAllElements();
 
             // 3. Diagrama de Componentes (Monitoring Context)
-            Component domainLayer = monitoringContext.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
+            Component domainLayer = PaymentMethod.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
 
-            Component monitoringController = monitoringContext.AddComponent("MonitoringController", "REST API endpoints de monitoreo.", "NodeJS (NestJS) REST Controller");
+            Component monitoringController = PaymentMethod.AddComponent("PaymentController", "REST API de pago de citas.", "NodeJS (NestJS) REST Controller");
 
-            Component monitoringApplicationService = monitoringContext.AddComponent("MonitoringApplicationService", "Provee métodos para el monitoreo, pertenece a la capa Application de DDD", "NestJS Component");
-
-            Component flightRepository = monitoringContext.AddComponent("FlightRepository", "Información del vuelo", "NestJS Component");
-            Component vaccineLoteRepository = monitoringContext.AddComponent("VaccineLoteRepository", "Información de lote de vacunas", "NestJS Component");
-            Component locationRepository = monitoringContext.AddComponent("LocationRepository", "Ubicación del vuelo", "NestJS Component");
-
-            Component aircraftSystemFacade = monitoringContext.AddComponent("Aircraft System Facade", "", "NestJS Component");
+            Component monitoringApplicationService = PaymentMethod.AddComponent("DatesPaymentService", "Provee métodos para el pago de citas, pertenece a la capa Application de DDD", "NestJS Component");
 
             apiRest.Uses(monitoringController, "", "JSON/HTTPS");
             monitoringController.Uses(monitoringApplicationService, "Invoca métodos de monitoreo");
 
             monitoringApplicationService.Uses(domainLayer, "Usa", "");
-            monitoringApplicationService.Uses(aircraftSystemFacade, "Usa");
-            monitoringApplicationService.Uses(flightRepository, "", "");
-            monitoringApplicationService.Uses(vaccineLoteRepository, "", "");
-            monitoringApplicationService.Uses(locationRepository, "", "");
+            monitoringApplicationService.Uses(database, "", "");
+            monitoringController.Uses(database, "", "");
 
-            flightRepository.Uses(database, "", "");
-            vaccineLoteRepository.Uses(database, "", "");
-            locationRepository.Uses(database, "", "");
-
-            locationRepository.Uses(googleMaps, "", "JSON/HTTPS");
-
-            aircraftSystemFacade.Uses(aircraftSystem, "JSON/HTTPS");
-            
+            monitoringController.Uses(Yape, "", "JSON/HTTPS");
+            monitoringController.Uses(Plin, "", "JSON/HTTPS");
+            monitoringController.Uses(Tunki, "", "JSON/HTTPS");
+            monitoringController.Uses(Visa, "", "JSON/HTTPS");
             // Tags
             domainLayer.AddTags("DomainLayer");
             monitoringController.AddTags("MonitoringController");
             monitoringApplicationService.AddTags("MonitoringApplicationService");
-            flightRepository.AddTags("FlightRepository");
-            vaccineLoteRepository.AddTags("VaccineLoteRepository");
-            locationRepository.AddTags("LocationRepository");
-            aircraftSystemFacade.AddTags("AircraftSystemFacade");
             
             styles.Add(new ElementStyle("DomainLayer") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("MonitoringController") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("MonitoringApplicationService") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("MonitoringDomainModel") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("FlightStatus") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("FlightRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("VaccineLoteRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("LocationRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("AircraftSystemFacade") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+      
 
-            ComponentView componentView = viewSet.CreateComponentView(monitoringContext, "Components", "Component Diagram");
+            ComponentView componentView = viewSet.CreateComponentView(PaymentMethod, "Components", "Component Diagram");
             componentView.PaperSize = PaperSize.A4_Landscape;
             componentView.Add(mobileApplication);
             componentView.Add(webApplication);
             componentView.Add(apiRest);
             componentView.Add(database);
-            componentView.Add(aircraftSystem);
-            componentView.Add(googleMaps);
+            componentView.Add(Visa);
+            componentView.Add(Yape);
+            componentView.Add(Tunki);
+            componentView.Add(Plin);
             componentView.AddAllComponents();
 
             structurizrClient.UnlockWorkspace(workspaceId);
