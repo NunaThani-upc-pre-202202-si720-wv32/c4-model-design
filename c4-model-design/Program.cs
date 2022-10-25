@@ -162,35 +162,44 @@ namespace c4_model_design
             contextView.PaperSize = PaperSize.A4_Landscape;
             containerView.AddAllElements();
 
-            // 3. Diagrama de Componentes (Monitoring Context)
+            // 3. Diagrama de Componentes (Payment Context)
             Component domainLayer = PaymentMethod.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
+            Component paymentController = PaymentMethod.AddComponent("Payment Controller", "REST API de pago de citas.", "NodeJS (NestJS) REST Controller");
+            Component PaymentApplicationService = PaymentMethod.AddComponent("Dates PaymentService", "Provee métodos para el pago de citas, pertenece a la capa Application de DDD", "NestJS Component");
+            Component PaymentRepository = PaymentMethod.AddComponent("Payment Repository", "Provee métodos para el acceso a la base de datos, pertenece a la capa Infrastructure de DDD", "NestJS Component");
+            Component PaymentEntity = PaymentMethod.AddComponent("Payment Entity", "Provee métodos para el acceso a la base de datos, pertenece a la capa Infrastructure de DDD", "NestJS Component");
+            Component PaymentModel = PaymentMethod.AddComponent("Payment Model", "Provee métodos para el acceso a la base de datos, pertenece a la capa Infrastructure de DDD", "NestJS Component");
+            Component PaymentSchema = PaymentMethod.AddComponent("Payment Schema", "Provee métodos para el acceso a la base de datos, pertenece a la capa Infrastructure de DDD", "NestJS Component");
+            Component facadePayment = PaymentMethod.AddComponent("Facade Payment", "Provee métodos para el acceso a la base de datos, pertenece a la capa Infrastructure de DDD", "NestJS Component");
+            
 
-            Component monitoringController = PaymentMethod.AddComponent("PaymentController", "REST API de pago de citas.", "NodeJS (NestJS) REST Controller");
+            apiRest.Uses(paymentController, "", "JSON/HTTPS");
+            paymentController.Uses(PaymentApplicationService, "Invoca métodos de monitoreo");
+            paymentController.Uses(facadePayment, "Invoca métodos de monitoreo");
 
-            Component monitoringApplicationService = PaymentMethod.AddComponent("DatesPaymentService", "Provee métodos para el pago de citas, pertenece a la capa Application de DDD", "NestJS Component");
-
-            apiRest.Uses(monitoringController, "", "JSON/HTTPS");
-            monitoringController.Uses(monitoringApplicationService, "Invoca métodos de monitoreo");
-
-            monitoringApplicationService.Uses(domainLayer, "Usa", "");
-            monitoringApplicationService.Uses(database, "", "");
-            monitoringController.Uses(database, "", "");
-
-            monitoringController.Uses(Yape, "", "JSON/HTTPS");
-            monitoringController.Uses(Plin, "", "JSON/HTTPS");
-            monitoringController.Uses(Tunki, "", "JSON/HTTPS");
-            monitoringController.Uses(Visa, "", "JSON/HTTPS");
+            PaymentApplicationService.Uses(domainLayer, "Usa", "");
+            PaymentApplicationService.Uses(database, "", "");
+            paymentController.Uses(database, "", "");
+            
+            paymentController.Uses(facadePayment, "", "");
+            facadePayment.Uses(Yape, "Makes API calls to", "JSON/HTTPS");
+            facadePayment.Uses(Plin, "Makes API calls to", "JSON/HTTPS");
+            facadePayment.Uses(Tunki, "Makes API calls to", "JSON/HTTPS");
+            facadePayment.Uses(Visa, "Makes API calls to", "JSON/HTTPS");
             // Tags
             domainLayer.AddTags("DomainLayer");
-            monitoringController.AddTags("MonitoringController");
-            monitoringApplicationService.AddTags("MonitoringApplicationService");
+            paymentController.AddTags("PaymentController");
+            PaymentApplicationService.AddTags("PaymentApplicationService");
+            PaymentRepository.AddTags("PaymentRepository");
+            PaymentEntity.AddTags("PaymentEntity");
+            PaymentModel.AddTags("PaymentModel");
+            PaymentSchema.AddTags("PaymentSchema");
+            facadePayment.AddTags("FacadePayment");
             
             styles.Add(new ElementStyle("DomainLayer") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("MonitoringController") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("MonitoringApplicationService") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("MonitoringDomainModel") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-            styles.Add(new ElementStyle("FlightStatus") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-      
+            styles.Add(new ElementStyle("PaymentController") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("PaymentApplicationService") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("PaymentDomainModel") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
 
             ComponentView componentView = viewSet.CreateComponentView(PaymentMethod, "Components", "Component Diagram");
             componentView.PaperSize = PaperSize.A4_Landscape;
@@ -201,10 +210,6 @@ namespace c4_model_design
             componentView.Add(Yape);
             componentView.Add(Tunki);
             componentView.Add(Plin);
-            componentView.Add(GoogleAccount);
-            componentView.Add(GoogleCalendar);
-            componentView.Add(GoogleMeet);
-            componentView.Add(ChatBot);
             
             componentView.AddAllComponents();
 
