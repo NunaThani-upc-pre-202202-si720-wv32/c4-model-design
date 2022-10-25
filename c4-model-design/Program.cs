@@ -75,9 +75,9 @@ namespace c4_model_design
             styles.Add(new ElementStyle("Plin") { Background = "#00eaff", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("Tunki") { Background = "#f700ff", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("Visa") { Background = "#0008ff", Color = "#ffffff", Shape = Shape.RoundedBox });
-            styles.Add(new ElementStyle("GoogleMeet") { Background = "#ff0000", Color = "#ffffff", Shape = Shape.RoundedBox });
-            styles.Add(new ElementStyle("GoogleCalendar") { Background = "#ff0000", Color = "#ffffff", Shape = Shape.RoundedBox });
-            styles.Add(new ElementStyle("GoogleAccount") { Background = "#ff0000", Color = "#ffffff", Shape = Shape.RoundedBox });
+            styles.Add(new ElementStyle("GoogleMeet") { Background = "#3fb504", Color = "#ffffff", Shape = Shape.RoundedBox });
+            styles.Add(new ElementStyle("GoogleCalendar") { Background = "#3fb504", Color = "#ffffff", Shape = Shape.RoundedBox });
+            styles.Add(new ElementStyle("GoogleAccount") { Background = "#3fb504", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("ChatBot") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.RoundedBox});
 
             SystemContextView contextView = viewSet.CreateSystemContextView(Enlazador, "Contexto", "Diagrama de contexto");
@@ -207,6 +207,64 @@ namespace c4_model_design
             componentView.Add(ChatBot);
             
             componentView.AddAllComponents();
+
+            structurizrClient.UnlockWorkspace(workspaceId);
+            structurizrClient.PutWorkspace(workspaceId, workspace);
+
+            // 4. Diagrama de Componentes (Appointment Context)
+
+            Component appointmentController = AppointmentContext.AddComponent("AppointmentController", "REST API endpoints de gestión de citas.", "NodeJS (NestJS) REST Controller");
+            Component appointmentApplicationService = AppointmentContext.AddComponent("AppontmentApplicationService", "Provee métodos para la gestión de citas, pertenece a la capa Application de DDD", "NestJS Component");
+            Component domainLayerAppointment = AppointmentContext.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
+            Component videoCallSystem = AppointmentContext.AddComponent("VideoCallSystem", "", "Component: NestJS Component");
+            Component scheduleRepository = AppointmentContext.AddComponent("ScheduleRepository", "Horarios del psicólogo", "Component: NestJS Component");
+            Component reviewRepository = AppointmentContext.AddComponent("ReviewRepository", "Comentarios a los psicológos", "Component: NestJS Component");
+            Component appointmentDateRepository = AppointmentContext.AddComponent("AppointmentDateRepository", "Fechas de citas", "Component: NestJS Component");
+
+            apiRest.Uses(appointmentController, "", "JSON/HTTPS");
+            appointmentController.Uses(appointmentApplicationService, "Invoca métodos de gestión de citas");
+
+            appointmentApplicationService.Uses(domainLayerAppointment, "Usa", "");
+            appointmentApplicationService.Uses(videoCallSystem, "", "");
+            appointmentApplicationService.Uses(scheduleRepository, "", "");
+            appointmentApplicationService.Uses(reviewRepository, "", "");
+            appointmentApplicationService.Uses(appointmentDateRepository, "", "");
+
+            scheduleRepository.Uses(database, "", "");
+            reviewRepository.Uses(database, "", "");
+            appointmentDateRepository.Uses(database, "", "");
+
+            videoCallSystem.Uses(GoogleMeet, "JSON/HTTPS");
+            scheduleRepository.Uses(GoogleCalendar, "JSON/HTTPS");
+
+            // Tags
+            domainLayerAppointment.AddTags("DomainLayerAppointment");
+            appointmentController.AddTags("AppointmentController");
+            appointmentApplicationService.AddTags("AppointmentApplicationService");
+            videoCallSystem.AddTags("VideoCallSystem");
+            scheduleRepository.AddTags("SceduleRepository");
+            reviewRepository.AddTags("ReviewRepository");
+            appointmentDateRepository.AddTags("AppointmentDateRepository");
+
+            styles.Add(new ElementStyle("DomainLayerAppointment") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("AppointmentController") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("AppointmentApplicationService") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("VideoCallSystem") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("SceduleRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("ReviewRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("AppointmentDateRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+
+
+            ComponentView componentAppointmentView = viewSet.CreateComponentView(AppointmentContext, "AppointmentComponent", "Component Diagram");
+            componentAppointmentView.PaperSize = PaperSize.A4_Landscape;
+
+            componentAppointmentView.Add(mobileApplication);
+            componentAppointmentView.Add(apiRest);
+            componentAppointmentView.Add(database);
+            componentAppointmentView.Add(GoogleMeet);
+            componentAppointmentView.Add(GoogleCalendar);
+
+            componentAppointmentView.AddAllComponents();
 
             structurizrClient.UnlockWorkspace(workspaceId);
             structurizrClient.PutWorkspace(workspaceId, workspace);
