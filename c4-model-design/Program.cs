@@ -318,6 +318,9 @@ namespace c4_model_design
             componentViewGroup.Add(GoogleMeet);
 
             componentViewGroup.AddAllComponents();
+            
+            structurizrClient.UnlockWorkspace(workspaceId);
+            structurizrClient.PutWorkspace(workspaceId, workspace);
         }
     }
 }
