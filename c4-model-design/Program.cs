@@ -31,7 +31,7 @@ namespace c4_model_design
             SoftwareSystem Tunki = model.AddSoftwareSystem("Tunki", "Permite realizar transacciones monetarias simples a través de un código QR");
             SoftwareSystem Visa = model.AddSoftwareSystem("Visa", "Permite realizar transacciones monetarias de una cuenta a otra");
             SoftwareSystem GoogleMeet = model.AddSoftwareSystem("Google Meet", "Permite realizar videoconferencias");
-            SoftwareSystem GoogleCalendar  = model.AddSoftwareSystem("Google Calendar", "Permite agendar citas");
+            SoftwareSystem GoogleCalendar = model.AddSoftwareSystem("Google Calendar", "Permite agendar citas");
             SoftwareSystem GoogleAccount = model.AddSoftwareSystem("Google Account", "Permite gestionar cuentas de correo electrónico");
             SoftwareSystem ChatBot = model.AddSoftwareSystem("ChatBot", "Permite interactuar con el paciente de forma natural");
 
@@ -78,7 +78,7 @@ namespace c4_model_design
             styles.Add(new ElementStyle("GoogleMeet") { Background = "#3fb504", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("GoogleCalendar") { Background = "#3fb504", Color = "#ffffff", Shape = Shape.RoundedBox });
             styles.Add(new ElementStyle("GoogleAccount") { Background = "#3fb504", Color = "#ffffff", Shape = Shape.RoundedBox });
-            styles.Add(new ElementStyle("ChatBot") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.RoundedBox});
+            styles.Add(new ElementStyle("ChatBot") { Background = "#aa60af", Color = "#ffffff", Shape = Shape.RoundedBox });
 
             SystemContextView contextView = viewSet.CreateSystemContextView(Enlazador, "Contexto", "Diagrama de contexto");
             contextView.PaperSize = PaperSize.A4_Landscape;
@@ -98,13 +98,13 @@ namespace c4_model_design
             Container GroupsContext = Enlazador.AddContainer("Mental Care Groups Context", "Bounded Context de grupos de pacientes con enfermedades mentales", "NodeJS (NestJS)");
 
             Container database = Enlazador.AddContainer("Database", "", "SQL");
-            
+
             Paciente.Uses(mobileApplication, "Consulta");
             Paciente.Uses(landingPage, "Consulta");
 
             Psicologo.Uses(mobileApplication, "Consulta");
             Psicologo.Uses(landingPage, "Consulta");
-            
+
             Administrador.Uses(mobileApplication, "Consulta");
             Administrador.Uses(landingPage, "Consulta");
 
@@ -128,14 +128,14 @@ namespace c4_model_design
             PaymentMethod.Uses(Plin, "API Request", "JSON/HTTPS");
             PaymentMethod.Uses(Tunki, "API Request", "JSON/HTTPS");
             PaymentMethod.Uses(Visa, "API Request", "JSON/HTTPS");
-            
+
             AppointmentContext.Uses(GoogleMeet, "API Request", "JSON/HTTPS");
             AppointmentContext.Uses(GoogleCalendar, "API Request", "JSON/HTTPS");
-            
+
             ChatBotContext.Uses(ChatBot, "API Request", "JSON/HTTPS");
-            
+
             AccountContext.Uses(GoogleAccount, "API Request", "JSON/HTTPS");
-            
+
 
             // Tags
             mobileApplication.AddTags("MobileApp");
@@ -169,24 +169,24 @@ namespace c4_model_design
             Component paymentRepository = PaymentMethod.AddComponent("Payment Repository", "Cuentas del usuario", "NestJS Component");
             Component paymentEntity = PaymentMethod.AddComponent("Payment Entity", "Datos de los metodos de pago", "NestJS Component");
             Component facadePayment = PaymentMethod.AddComponent("Facade Payment", "Sistema que maneja el pago para distintas plataformas", "NestJS Component");
-            
+
 
             apiRest.Uses(paymentController, "", "JSON/HTTPS");
             paymentController.Uses(paymentApplicationService, "Invoca métodos de monitoreo");
             paymentController.Uses(facadePayment, "Invoca métodos de monitoreo");
-            
+
             paymentApplicationService.Uses(domainLayer, "Usa", "");
             paymentApplicationService.Uses(paymentEntity, "Usa", "");
             paymentApplicationService.Uses(paymentRepository, "Usa", "");
-            
+
             paymentRepository.Uses(database, "Usa", "");
-            
-            
+
+
             facadePayment.Uses(Yape, "Makes API calls to", "JSON/HTTPS");
             facadePayment.Uses(Plin, "Makes API calls to", "JSON/HTTPS");
             facadePayment.Uses(Tunki, "Makes API calls to", "JSON/HTTPS");
             facadePayment.Uses(Visa, "Makes API calls to", "JSON/HTTPS");
-            
+
             // Tags
             domainLayer.AddTags("DomainLayer");
             paymentController.AddTags("PaymentController");
@@ -194,7 +194,7 @@ namespace c4_model_design
             paymentRepository.AddTags("PaymentRepository");
             paymentEntity.AddTags("PaymentEntity");
             facadePayment.AddTags("FacadePayment");
-            
+
             styles.Add(new ElementStyle("DomainLayer") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("PaymentController") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("PaymentApplicationService") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
@@ -203,7 +203,7 @@ namespace c4_model_design
             styles.Add(new ElementStyle("PaymentEntity") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("FacadePayment") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
 
-            ComponentView componentView = viewSet.CreateComponentView(PaymentMethod, "Components", "Component Diagram");
+            ComponentView componentView = viewSet.CreateComponentView(PaymentMethod, "PaymentComponents", "Component Diagram");
             componentView.PaperSize = PaperSize.A4_Landscape;
             componentView.Add(mobileApplication);
             componentView.Add(apiRest);
@@ -212,7 +212,7 @@ namespace c4_model_design
             componentView.Add(Yape);
             componentView.Add(Tunki);
             componentView.Add(Plin);
-            
+
             componentView.AddAllComponents();
 
             structurizrClient.UnlockWorkspace(workspaceId);
@@ -272,11 +272,11 @@ namespace c4_model_design
             componentAppointmentView.Add(GoogleCalendar);
 
             componentAppointmentView.AddAllComponents();
-            
+
             structurizrClient.UnlockWorkspace(workspaceId);
             structurizrClient.PutWorkspace(workspaceId, workspace);
-            
-             //6. Diagrama de Componentes (Groups Context)
+
+            //6. Diagrama de Componentes (Groups Context)
             Component domainLayerGroupsContext = GroupsContext.AddComponent("Domain Layer Groups", "", "NodeJS (NestJS)");
             Component mentalCareGroupsController = GroupsContext.AddComponent("Mental Care Groups Controller", "REST API de mental care groups.", "NodeJS (NestJS) REST Controller");
             Component mentalCareGroupsService = GroupsContext.AddComponent("Mental Care Groups Service", "Provee métodos para la realización de grupos de pacientes para su interacción, pertenece a la capa Application de DDD", "NestJS Component");
@@ -284,7 +284,7 @@ namespace c4_model_design
             Component accountsRepository = GroupsContext.AddComponent("Accounts Repository", "Cuentas de usuarios de la aplicación", "NestJS Component");
             Component messagesRepository = GroupsContext.AddComponent("Messages Repository", "Mensajes de conversaciones entre los participantes de la aplicación", "NestJS Component");
             Component motivacionEmocionalRepository = GroupsContext.AddComponent("Motivación Emocial Repository", "Metodos de apoyo emocional a los pacientes", "NestJS Component");
-            
+
             apiRest.Uses(mentalCareGroupsController, "", "JSON/HTTPS");
             mentalCareGroupsController.Uses(mentalCareGroupsService, "Invoca métodos de grupos de cuidado mental");
             mentalCareGroupsService.Uses(domainLayer, "Usa", "");
@@ -297,7 +297,7 @@ namespace c4_model_design
             messagesRepository.Uses(database, "", "");
             motivacionEmocionalRepository.Uses(database, "", "");
             mentalCareGroupsService.Uses(motivacionEmocionalRepository, "", "");
-            
+
             // Tags
             domainLayerGroupsContext.AddTags("DomainLayerGroups");
             mentalCareGroupsController.AddTags("MentalCareGroupsController");
@@ -306,7 +306,7 @@ namespace c4_model_design
             accountsRepository.AddTags("AccountsRepository");
             messagesRepository.AddTags("MessagesRepository");
             motivacionEmocionalRepository.AddTags("MotivacionEmocionalRepository");
-            
+
             styles.Add(new ElementStyle("DomainLayerGroups") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("MentalCareGroupsController") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("MentalCareGroupsService") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
@@ -314,9 +314,9 @@ namespace c4_model_design
             styles.Add(new ElementStyle("AccountsRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("MessagesRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("MotivacionEmocionalRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
-      
 
-            ComponentView componentViewGroup = viewSet.CreateComponentView(GroupsContext, "Components", "Component Diagram");
+
+            ComponentView componentViewGroup = viewSet.CreateComponentView(GroupsContext, "GroupComponent", "Component Diagram");
             componentViewGroup.PaperSize = PaperSize.A4_Landscape;
             componentViewGroup.Add(mobileApplication);
             componentViewGroup.Add(apiRest);
@@ -325,7 +325,46 @@ namespace c4_model_design
             componentViewGroup.Add(GoogleMeet);
 
             componentViewGroup.AddAllComponents();
-            
+
+            structurizrClient.UnlockWorkspace(workspaceId);
+            structurizrClient.PutWorkspace(workspaceId, workspace);
+
+
+            //7. Diagrama de Componentes (Mental Health Diagnostic Context)
+
+            Component domainLayerDiagnosticContext = MentalHealthContext.AddComponent("Mental Health Diagnostic Context", "", "NodeJS (NestJS)");
+            Component mentalCareDiagnosticController = MentalHealthContext.AddComponent("Mental Care Diagnostic Controller", "REST API de mental care groups.", "NodeJS (NestJS) REST Controller");
+            Component mentalCareDiagnosticService = MentalHealthContext.AddComponent("Mental Care Diagnostic Service", "Provee métodos para la realización de grupos de pacientes para su interacción, pertenece a la capa Application de DDD", "NestJS Component");
+            Component diagnosticRepository = MentalHealthContext.AddComponent("Accounts Repository", "Cuentas de usuarios de la aplicación", "NestJS Component");
+
+            apiRest.Uses(mentalCareDiagnosticController, "", "JSON/HTTPS");
+            mentalCareDiagnosticController.Uses(mentalCareDiagnosticService, "Invoca métodos para el control de diagnósticos");
+            mentalCareDiagnosticService.Uses(domainLayer, "Usa", "");
+            mentalCareDiagnosticService.Uses(ChatBot, "Usa", "");
+            mentalCareDiagnosticService.Uses(diagnosticRepository, "", "");
+            diagnosticRepository.Uses(database, "", "");
+            mentalCareDiagnosticService.Uses(diagnosticRepository, "", "");
+
+            //// Tags
+            domainLayerDiagnosticContext.AddTags("DomainLayerDiagnostic");
+            mentalCareDiagnosticController.AddTags("MentalCareDiagnosticController");
+            mentalCareDiagnosticService.AddTags("MentalCareDiagnosticService");
+            diagnosticRepository.AddTags("DiagnosticRepository");
+
+            styles.Add(new ElementStyle("DomainLayerDiagnostic") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("MentalCareDiagnosticController") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("MentalCareDiagnosticService") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("DiagnosticRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+
+            ComponentView componentViewDiagnostic = viewSet.CreateComponentView(MentalHealthContext, "MentalDiagnosticComponent", "Component Diagram");
+            componentViewDiagnostic.PaperSize = PaperSize.A4_Landscape;
+            componentViewDiagnostic.Add(mobileApplication);
+            componentViewDiagnostic.Add(apiRest);
+            componentViewDiagnostic.Add(database);
+            componentViewDiagnostic.Add(ChatBot);
+
+            componentViewDiagnostic.AddAllComponents();
+
             structurizrClient.UnlockWorkspace(workspaceId);
             structurizrClient.PutWorkspace(workspaceId, workspace);
         }
