@@ -90,7 +90,7 @@ namespace c4_model_design
             Container landingPage = Enlazador.AddContainer("Landing Page", "", "React");
             Container apiRest = Enlazador.AddContainer("API REST", "API Rest", "NodeJS (NestJS) port 8080");
 
-            Container PaymentMethod = Enlazador.AddContainer("Payment Context", "Bounded Context de cobro y pago de la aplicación, para que los pacientes agenden citas", "NodeJS (NestJS)");
+            Container PaymentContext = Enlazador.AddContainer("Payment Context", "Bounded Context de cobro y pago de la aplicación, para que los pacientes agenden citas", "NodeJS (NestJS)");
             Container AppointmentContext = Enlazador.AddContainer("Appointment Context", "Bounded Context de citas de psicólogos y pacientes", "NodeJS (NestJS)");
             Container ChatBotContext = Enlazador.AddContainer("Chatbot Context", "Bounded Context de Chatbot con el paciente", "NodeJS (NestJS)");
             Container AccountContext = Enlazador.AddContainer("Account Context", "Bounded Context de Cuentas de la aplicación", "NodeJS (NestJS)");
@@ -110,24 +110,24 @@ namespace c4_model_design
 
             mobileApplication.Uses(apiRest, "API Request", "JSON/HTTPS");
 
-            apiRest.Uses(PaymentMethod, "", "");
+            apiRest.Uses(PaymentContext, "", "");
             apiRest.Uses(AppointmentContext, "", "");
             apiRest.Uses(ChatBotContext, "", "");
             apiRest.Uses(AccountContext, "", "");
             apiRest.Uses(MentalHealthContext, "", "");
             apiRest.Uses(GroupsContext, "", "");
 
-            PaymentMethod.Uses(database, "", "");
+            PaymentContext.Uses(database, "", "");
             AppointmentContext.Uses(database, "", "");
             ChatBotContext.Uses(database, "", "");
             AccountContext.Uses(database, "", "");
             MentalHealthContext.Uses(database, "", "");
             GroupsContext.Uses(database, "", "");
 
-            PaymentMethod.Uses(Yape, "API Request", "JSON/HTTPS");
-            PaymentMethod.Uses(Plin, "API Request", "JSON/HTTPS");
-            PaymentMethod.Uses(Tunki, "API Request", "JSON/HTTPS");
-            PaymentMethod.Uses(Visa, "API Request", "JSON/HTTPS");
+            PaymentContext.Uses(Yape, "API Request", "JSON/HTTPS");
+            PaymentContext.Uses(Plin, "API Request", "JSON/HTTPS");
+            PaymentContext.Uses(Tunki, "API Request", "JSON/HTTPS");
+            PaymentContext.Uses(Visa, "API Request", "JSON/HTTPS");
 
             AppointmentContext.Uses(GoogleMeet, "API Request", "JSON/HTTPS");
             AppointmentContext.Uses(GoogleCalendar, "API Request", "JSON/HTTPS");
@@ -145,7 +145,7 @@ namespace c4_model_design
 
             string contextTag = "Context";
 
-            PaymentMethod.AddTags(contextTag);
+            PaymentContext.AddTags(contextTag);
             AppointmentContext.AddTags(contextTag);
             ChatBotContext.AddTags(contextTag);
             AccountContext.AddTags(contextTag);
@@ -163,21 +163,21 @@ namespace c4_model_design
             containerView.AddAllElements();
 
             // 3. Diagrama de Componentes (Payment Context)
-            Component domainLayer = PaymentMethod.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
-            Component paymentController = PaymentMethod.AddComponent("Payment Controller", "REST API de pago de citas.", "NodeJS (NestJS) REST Controller");
-            Component paymentApplicationService = PaymentMethod.AddComponent("Dates PaymentService", "Provee métodos para el pago de citas, pertenece a la capa Application de DDD", "NestJS Component");
-            Component paymentRepository = PaymentMethod.AddComponent("Payment Repository", "Cuentas del usuario", "NestJS Component");
-            Component paymentEntity = PaymentMethod.AddComponent("Payment Entity", "Datos de los metodos de pago", "NestJS Component");
-            Component facadePayment = PaymentMethod.AddComponent("Facade Payment", "Sistema que maneja el pago para distintas plataformas", "NestJS Component");
+            Component domainLayer = PaymentContext.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
+            Component paymentController = PaymentContext.AddComponent("Payment Controller", "REST API de pago de citas.", "NodeJS (NestJS) REST Controller");
+            Component paymentApplicationService = PaymentContext.AddComponent("Dates PaymentService", "Provee métodos para el pago de citas, pertenece a la capa Application de DDD", "NestJS Component");
+            Component paymentRepository = PaymentContext.AddComponent("Payment Repository", "Cuentas del usuario", "NestJS Component");
+            Component paymentEntity = PaymentContext.AddComponent("Payment Entity", "Datos de los metodos de pago", "NestJS Component");
+            Component facadePayment = PaymentContext.AddComponent("Facade Payment", "Sistema que maneja el pago para distintas plataformas", "NestJS Component");
 
 
             apiRest.Uses(paymentController, "", "JSON/HTTPS");
             paymentController.Uses(paymentApplicationService, "Invoca métodos de monitoreo");
-            paymentController.Uses(facadePayment, "Invoca métodos de monitoreo");
 
             paymentApplicationService.Uses(domainLayer, "Usa", "");
             paymentApplicationService.Uses(paymentEntity, "Usa", "");
             paymentApplicationService.Uses(paymentRepository, "Usa", "");
+            paymentApplicationService.Uses(facadePayment, "Usa", "");
 
             paymentRepository.Uses(database, "Usa", "");
 
@@ -203,7 +203,7 @@ namespace c4_model_design
             styles.Add(new ElementStyle("PaymentEntity") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("FacadePayment") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
 
-            ComponentView componentView = viewSet.CreateComponentView(PaymentMethod, "PaymentComponents", "Component Diagram");
+            ComponentView componentView = viewSet.CreateComponentView(PaymentContext, "PaymentComponents", "Component Diagram");
             componentView.PaperSize = PaperSize.A4_Landscape;
             componentView.Add(mobileApplication);
             componentView.Add(apiRest);
