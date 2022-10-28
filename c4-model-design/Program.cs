@@ -332,19 +332,22 @@ namespace c4_model_design
 
             //7. Diagrama de Componentes (Mental Health Diagnostic Context)
 
-            Component domainLayerDiagnosticContext = MentalHealthContext.AddComponent("Mental Health Diagnostic Context", "", "NodeJS (NestJS)");
+            Component domainLayerDiagnosticContext = MentalHealthContext.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
             Component mentalCareDiagnosticController = MentalHealthContext.AddComponent("Mental Care Diagnostic Controller", "REST API de mental care groups.", "NodeJS (NestJS) REST Controller");
             Component mentalCareDiagnosticService = MentalHealthContext.AddComponent("Mental Care Diagnostic Service", "Provee métodos para la realización de grupos de pacientes para su interacción, pertenece a la capa Application de DDD", "NestJS Component");
             Component diagnosticRepository = MentalHealthContext.AddComponent("Accounts Repository", "Cuentas de usuarios de la aplicación", "NestJS Component");
 
             apiRest.Uses(mentalCareDiagnosticController, "", "JSON/HTTPS");
-            mentalCareDiagnosticController.Uses(mentalCareDiagnosticService, "Invoca métodos para el control de diagnósticos");
-            mentalCareDiagnosticService.Uses(domainLayer, "Usa", "");
 
+            mentalCareDiagnosticController.Uses(mentalCareDiagnosticService, "Invoca métodos para el control de diagnósticos");
+
+            mentalCareDiagnosticService.Uses(domainLayerDiagnosticContext, "Usa", "");
             mentalCareDiagnosticService.Uses(ChatBot, "Usa", "");
             mentalCareDiagnosticService.Uses(diagnosticRepository, "", "");
             diagnosticRepository.Uses(database, "", "");
             mentalCareDiagnosticService.Uses(diagnosticRepository, "", "");
+            ChatBot.Uses(database, "", "");
+
 
             //// Tags
             domainLayerDiagnosticContext.AddTags("DomainLayerDiagnostic");
