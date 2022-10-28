@@ -1,3 +1,4 @@
+using System;
 using Structurizr;
 using Structurizr.Api;
 
@@ -161,8 +162,113 @@ namespace c4_model_design
             ContainerView containerView = viewSet.CreateContainerView(Enlazador, "Contenedor", "Diagrama de contenedores");
             contextView.PaperSize = PaperSize.A4_Landscape;
             containerView.AddAllElements();
+            
+            // 3.1. Diagrama de Componentes (Account Context)
+            Component accountController = AccountContext.AddComponent("Account Controller", "Controlador de Cuentas de Usuario.", "NodeJS (NestJS) REST Controller");
+           
+            Component accountCreator = AccountContext.AddComponent("Account Creator", "permite crear cuentas de usuario, pertenece a la capa Application de DDD", "NestJS Component");
+            Component accountLogger = AccountContext.AddComponent("Account Logger", "permite validar los datos de login de un usuario, pertenece a la capa Application de DDD", "NestJS Component");
+            
+            Component accountRepository = AccountContext.AddComponent("Account Repository", "Concede el acceso a la base de datos de cuentas del usuario", "NestJS Component");
+            Component accountMapper = AccountContext.AddComponent("Account Mapper", "Mapea los usuarios guardados en la base de datos", "NestJS Component");
+            
+            Component tempAccount = AccountContext.AddComponent("Temporal Logged Account", "Almacena los datos temporales del usuario en el que se ha iniciado sesión", "NestJS Component");
+            Component facadeAccounts = AccountContext.AddComponent("Facade Account", "Sistema que permite registrarse o iniciar sesión con cuentas de otras plataformas", "NestJS Component");
 
-            // 3. Diagrama de Componentes (Payment Context)
+
+            apiRest.Uses(accountController, "", "JSON/HTTPS");
+
+            accountController.Uses(accountCreator, "Usa", "");
+            accountController.Uses(accountLogger, "Usa", "");
+
+            accountCreator.Uses(accountRepository, "Usa", "");
+            accountCreator.Uses(facadeAccounts, "Usa", "");
+            accountLogger.Uses(tempAccount, "Usa", "");
+            accountLogger.Uses(accountRepository, "Usa", "");
+            accountLogger.Uses(facadeAccounts, "Usa", "");
+            accountRepository.Uses(accountMapper, "Solicita que lea o realice cambios a la base de datos", "");
+
+            accountMapper.Uses(database, "Escribe y Lee datos de usuario", "");
+
+
+            facadeAccounts.Uses(GoogleAccount, "Llama al API", "JSON/HTTPS");
+
+            // Tags
+            accountController.AddTags("Controller");
+            accountCreator.AddTags("Service");
+            accountLogger.AddTags("Service");
+            accountRepository.AddTags("Repository");
+            accountMapper.AddTags("Repository");
+            tempAccount.AddTags("Entity");
+            facadeAccounts.AddTags("Facade");
+            AccountContext.AddTags("Account");
+
+
+
+            styles.Add(new ElementStyle("Controller") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("Service") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("Account") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("Repository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("Entity") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("Facade") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+
+            ComponentView componentViewAccount = viewSet.CreateComponentView(AccountContext, "AccountComponents", "Component Diagram");
+            componentViewAccount.PaperSize = PaperSize.A4_Landscape;
+            componentViewAccount.Add(mobileApplication);
+            componentViewAccount.Add(apiRest);
+            componentViewAccount.Add(database);
+            componentViewAccount.Add(GoogleAccount);
+
+            componentViewAccount.AddAllComponents();
+            // 3.2. Diagrama de Componentes (Chatbot Context)
+            Component chatbotController = ChatBotContext.AddComponent("Chatbot Controller", "Controlador de Chatbot, pertenece a la capa Application de DDD", "NodeJS (NestJS) REST Controller");
+
+            Component mentalHealthIllnessRepository = ChatBotContext.AddComponent("Mental Health Illness Repository", "Permite al chatbot leer la información de distintos tipos de enfermedades mentales", "NestJS Component") ?? throw new ArgumentNullException("ChatBotContext.AddComponent(\"Mental Health Illness Repository\", \"Permite al chatbot leer la información de distintos tipos de enfermedades mentales\", \"NestJS Component\")");
+            Component mentalHealthIllness = ChatBotContext.AddComponent("Mental Health Illness", "Almacena la enfermedad mental que el chatbot ha detectado", "NestJS Component");
+            
+            Component chatFarcade = ChatBotContext.AddComponent("Facade Chatbot", "Permite que los usuarios interactuen con un chatbot real, y que este indique al sistema que accion desea realizar el usuario, o que información desea visualizar", "NestJS Component");
+
+
+            apiRest.Uses(chatbotController, "", "JSON/HTTPS");
+
+            chatbotController.Uses(chatFarcade, "Usa", "");
+            chatbotController.Uses(mentalHealthIllness, "Usa", "");
+            chatbotController.Uses(mentalHealthIllnessRepository, "Usa", "");
+
+
+
+            mentalHealthIllnessRepository.Uses(database, "Lee información sobre enfermedades mentales de la base de datos", "");
+            mentalHealthIllness.Uses(database, "Asocia un paciente a una enfermedad mental", "");
+
+
+            chatFarcade.Uses(ChatBot, "Llama al API", "JSON/HTTPS");
+
+            // Tags
+            chatbotController.AddTags("ControllerChatbot");
+            mentalHealthIllnessRepository.AddTags("MentalRepository");
+            mentalHealthIllness.AddTags("MentalHealthIllness");
+            chatFarcade.AddTags("FacadeChat");
+
+
+            styles.Add(new ElementStyle("MentalHealthIllness") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("FacadeChat") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("ControllerChatbot") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
+            styles.Add(new ElementStyle("MentalRepository") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });;
+
+            ComponentView componentViewChatbot = viewSet.CreateComponentView(ChatBotContext, "ChatbotComponents", "Component Diagram");
+            componentViewChatbot.PaperSize = PaperSize.A4_Landscape;
+            componentViewChatbot.Add(mobileApplication);
+            componentViewChatbot.Add(apiRest);
+            componentViewChatbot.Add(database);
+            componentViewChatbot.Add(ChatBot);
+
+            componentViewChatbot.AddAllComponents();
+
+
+            structurizrClient.UnlockWorkspace(workspaceId);
+            structurizrClient.PutWorkspace(workspaceId, workspace);
+
+            // 3.3. Diagrama de Componentes (Payment Context)
             Component domainLayer = PaymentContext.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
             Component paymentController = PaymentContext.AddComponent("Payment Controller", "REST API de pago de citas.", "NodeJS (NestJS) REST Controller");
             Component paymentApplicationService = PaymentContext.AddComponent("Dates PaymentService", "Provee métodos para el pago de citas, pertenece a la capa Application de DDD", "NestJS Component");
@@ -203,22 +309,22 @@ namespace c4_model_design
             styles.Add(new ElementStyle("PaymentEntity") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
             styles.Add(new ElementStyle("FacadePayment") { Shape = Shape.Component, Background = "#facc2e", Icon = "" });
 
-            ComponentView componentView = viewSet.CreateComponentView(PaymentContext, "PaymentComponents", "Component Diagram");
-            componentView.PaperSize = PaperSize.A4_Landscape;
-            componentView.Add(mobileApplication);
-            componentView.Add(apiRest);
-            componentView.Add(database);
-            componentView.Add(Visa);
-            componentView.Add(Yape);
-            componentView.Add(Tunki);
-            componentView.Add(Plin);
+            ComponentView componentViewPayment = viewSet.CreateComponentView(PaymentContext, "PaymentComponents", "Component Diagram");
+            componentViewPayment.PaperSize = PaperSize.A4_Landscape;
+            componentViewPayment.Add(mobileApplication);
+            componentViewPayment.Add(apiRest);
+            componentViewPayment.Add(database);
+            componentViewPayment.Add(Visa);
+            componentViewPayment.Add(Yape);
+            componentViewPayment.Add(Tunki);
+            componentViewPayment.Add(Plin);
 
-            componentView.AddAllComponents();
+            componentViewPayment.AddAllComponents();
 
             structurizrClient.UnlockWorkspace(workspaceId);
             structurizrClient.PutWorkspace(workspaceId, workspace);
 
-            // 4. Diagrama de Componentes (Appointment Context)
+            // 3.4. Diagrama de Componentes (Appointment Context)
 
             Component appointmentController = AppointmentContext.AddComponent("AppointmentController", "REST API endpoints de gestión de citas.", "NodeJS (NestJS) REST Controller");
             Component appointmentApplicationService = AppointmentContext.AddComponent("AppontmentApplicationService", "Provee métodos para la gestión de citas, pertenece a la capa Application de DDD", "NestJS Component");
@@ -276,7 +382,7 @@ namespace c4_model_design
             structurizrClient.UnlockWorkspace(workspaceId);
             structurizrClient.PutWorkspace(workspaceId, workspace);
 
-            //6. Diagrama de Componentes (Groups Context)
+            //3.5. Diagrama de Componentes (Groups Context)
             Component domainLayerGroupsContext = GroupsContext.AddComponent("Domain Layer Groups", "", "NodeJS (NestJS)");
             Component mentalCareGroupsController = GroupsContext.AddComponent("Mental Care Groups Controller", "REST API de mental care groups.", "NodeJS (NestJS) REST Controller");
             Component mentalCareGroupsService = GroupsContext.AddComponent("Mental Care Groups Service", "Provee métodos para la realización de grupos de pacientes para su interacción, pertenece a la capa Application de DDD", "NestJS Component");
@@ -330,7 +436,7 @@ namespace c4_model_design
             structurizrClient.PutWorkspace(workspaceId, workspace);
 
 
-            //7. Diagrama de Componentes (Mental Health Diagnostic Context)
+            //3.6. Diagrama de Componentes (Mental Health Diagnostic Context)
 
             Component domainLayerDiagnosticContext = MentalHealthContext.AddComponent("Domain Layer", "", "NodeJS (NestJS)");
             Component mentalCareDiagnosticController = MentalHealthContext.AddComponent("Mental Care Diagnostic Controller", "REST API de mental care groups.", "NodeJS (NestJS) REST Controller");
