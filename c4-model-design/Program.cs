@@ -287,7 +287,7 @@ namespace c4_model_design
 
             apiRest.Uses(mentalCareGroupsController, "", "JSON/HTTPS");
             mentalCareGroupsController.Uses(mentalCareGroupsService, "Invoca métodos de grupos de cuidado mental");
-            mentalCareGroupsService.Uses(domainLayer, "Usa", "");
+            mentalCareGroupsService.Uses(domainLayerGroupsContext, "Usa", "");
             mentalCareGroupsService.Uses(mentalCareGroupsMeetingFacade, "", "");
             mentalCareGroupsService.Uses(accountsRepository, "", "");
             mentalCareGroupsMeetingFacade.Uses(GoogleMeet, "", "JSON/HTTPS");
