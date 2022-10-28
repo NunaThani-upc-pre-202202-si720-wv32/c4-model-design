@@ -340,6 +340,7 @@ namespace c4_model_design
             apiRest.Uses(mentalCareDiagnosticController, "", "JSON/HTTPS");
             mentalCareDiagnosticController.Uses(mentalCareDiagnosticService, "Invoca métodos para el control de diagnósticos");
             mentalCareDiagnosticService.Uses(domainLayer, "Usa", "");
+
             mentalCareDiagnosticService.Uses(ChatBot, "Usa", "");
             mentalCareDiagnosticService.Uses(diagnosticRepository, "", "");
             diagnosticRepository.Uses(database, "", "");
